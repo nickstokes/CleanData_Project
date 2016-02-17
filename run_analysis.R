@@ -3,7 +3,8 @@ library(dplyr)
 library(stringr)
 
 
-# Download and unzip data files.
+# Download and unzip data files. Currently Commented out to save bandwidth. 
+# Uncomment the next three lines to enable download and extraction of the dataset
 # data_url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 # download.file(data_url, destfile = "Dataset.zip")
 # unzip("Dataset.zip")
@@ -19,6 +20,7 @@ features <- fread("UCI HAR Dataset/features.txt",
 # filter features to only those with mean() or std()
 features.import <- features[grepl("mean\\(\\)|std\\(\\)",feature.name),]
 
+# make feature names more readable
 features.import[,feature.name := str_replace_all(feature.name, "\\(\\)", "")]
 features.import[,feature.name := str_replace_all(feature.name, "-", ".")]
 
@@ -67,4 +69,4 @@ join.data <- group_by(join.data, activity.id, activity.name, subject.id)
 # get the average of all the variables for each activity and subject
 tidy.data <- summarise_each(join.data, funs(mean))
 
-write.table(tidy.data, file = "tidy_data.txt", row.names = FALSE)
+write.table(tidy.data, file = "data_summary.txt", row.names = FALSE)
